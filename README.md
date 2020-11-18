@@ -1,6 +1,6 @@
 # Nydus
 
-Nydus is an extensible SC2 client api tool.
+Nydus is an plugin based SC2 client api tool.
 
 Icon by [@MinnyMausGG](https://twitter.com/MinnyMausGG)
 
