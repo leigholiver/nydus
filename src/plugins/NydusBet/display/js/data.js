@@ -1,0 +1,1 @@
+window.data = {"playerA": "player1", "playerARace": "Terr", "playerAScore": 0, "playerAColour": "self", "playerB": "player2", "playerBRace": "Prot", "playerBScore": 0, "playerBColour": "opponent"}

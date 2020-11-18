@@ -1,0 +1,4 @@
+PyQt5==5.12.2
+PyInstaller==4.1
+qdarkstyle==2.7
+requests

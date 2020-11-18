@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css?family=Michroma');
+
+:root {
+	--self: #00ba00;
+	--opponent: #fe0000;
+	--white: #fefefe;
+	--red: #b3141e;
+	--blue: #0042fe;
+	--teal: #1ca6e9;
+	--purple: #540080;
+	--yellow: #eae029;
+	--orange: #fd890e;
+	--green: #167f00;
+	--lightpink: #cba5fb;
+	--violet: #1f01c8;
+	--lightgrey: #525493;
+	--darkgreen: #106246;
+	--brown: #4e2a04;
+	--lightgreen: #95fe90;
+	--darkgrey: #232323;
+	--pink: #e45baf;
+
+	--playerA: var(--self);
+	--playerB: var(--opponent);
+}
+
+.scene {
+	font-family: 'Michroma', sans-serif;
+	font-size: 3rem;
+	font-weight: bolder;
+	background-color: #000;
+	color: #FFF;
+	width: 800px;
+}
+
+.player-row {
+	height: 90px;
+	display: flex;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.player-row > div {
+	height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.score {
+	background-color: #FFF;
+	color: #000;
+	width: auto;
+	max-width: 340px;
+	overflow: hidden;
+	position: relative;
+	z-index: 6;
+	font-size: 3.5rem;
+	padding: 0px 15px;
+}
+
+.playerA.name, .playerA.spacer, .playerA.race {
+	background-color: var(--playerA);
+}
+
+.playerB.name, .playerB.spacer, .playerB.race {
+	background-color: var(--playerB);
+}
+
+.name {
+	border-radius: 10px;
+	z-index: 5;
+	position: relative;
+	flex-grow: 1;
+	align-items: start !important;
+	margin-left: -20px;
+	padding-left: 45px;
+}
+
+.race {
+	border-radius: 10px;
+	z-index: 4;
+	width: 150px;
+	text-align: right;
+	margin-left: -50px;
+	position: relative;
+	filter: brightness(0.6);
+}
+
+
+.name::after {
+	content: '';
+	height: 100px;
+	width: 100px;
+	margin-left: 76px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: -110px;
+}
+
+.name[data-race="Terr"]::after {
+	background-image: url('terran.png');
+}
+
+.name[data-race="Zerg"]::after {
+	background-image: url('zerg.png');
+}
+
+.name[data-race="Prot"]::after {
+	background-image: url('protoss.png');
+	background-size: 70%;
+}
+
+.name[data-race="random"]::after {
+	background-image: url('random.png');
+	background-size: 75%;
+}
+
+.spacer {
+	border-radius: 10px;
+	z-index: 3;
+	width: 55px;
+	position: relative;
+	margin-left: -30px;
+}

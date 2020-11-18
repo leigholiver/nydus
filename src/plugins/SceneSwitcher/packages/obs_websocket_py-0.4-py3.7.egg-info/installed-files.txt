@@ -1,0 +1,17 @@
+..\obswebsocket\__init__.py
+..\obswebsocket\__pycache__\__init__.cpython-37.pyc
+..\obswebsocket\__pycache__\base_classes.cpython-37.pyc
+..\obswebsocket\__pycache__\core.cpython-37.pyc
+..\obswebsocket\__pycache__\events.cpython-37.pyc
+..\obswebsocket\__pycache__\exceptions.cpython-37.pyc
+..\obswebsocket\__pycache__\requests.cpython-37.pyc
+..\obswebsocket\base_classes.py
+..\obswebsocket\core.py
+..\obswebsocket\events.py
+..\obswebsocket\exceptions.py
+..\obswebsocket\requests.py
+PKG-INFO
+SOURCES.txt
+dependency_links.txt
+requires.txt
+top_level.txt
