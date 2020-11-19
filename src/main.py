@@ -1,4 +1,4 @@
-import sys, qdarkstyle, os, ctypes, requests, qdarkstyle.pyqt5_style_rc
+import sys, qdarkstyle, os, ctypes, requests
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QFile, QTextStream
@@ -30,6 +30,10 @@ def main():
     try:
         app = QApplication(sys.argv)
         app.setWindowIcon(QIcon(base_path + '/lib/nydus.ico'))
+
+        # make sure the form imports show
+        # import here because it crashes if its not?
+        import qdarkstyle.pyqt5_style_rc
         app.setStyleSheet(get_stylesheet(base_path))
 
         # set up nydus
