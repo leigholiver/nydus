@@ -1,4 +1,5 @@
 PyQt5==5.12.2
+pyqt5-sip
 PyInstaller==4.1
 qdarkstyle==2.7
 requests

@@ -1,6 +1,6 @@
 # Nydus
 
-Nydus is an plugin based SC2 client api tool.
+Nydus is tool for the SC2 client api, extendable through plugins.
 
 Icon by [@MinnyMausGG](https://twitter.com/MinnyMausGG)
 
@@ -113,6 +113,9 @@ You can simulate SC2 client api responses to reduce development time by using [S
 ---
 ## Building from source
 Install the dependencies: `pip install -r requirements.txt`
+
 (Windows) Run `build-win.bat`
+
 (Linux) Run `./build-linux.sh`
+
 The package will be built into the `dist` folder
