@@ -13,7 +13,9 @@ a = Analysis(['src/main.py'],
                 ('src/lib/nydus.ico', 'lib'),
                 ('src/lib/style.qss', 'lib')
              ],
-             hiddenimports=[],
+             hiddenimports=[
+                'PyQt5.sip'
+             ],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
