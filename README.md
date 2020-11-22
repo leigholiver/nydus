@@ -7,19 +7,19 @@ Icon by [@MinnyMausGG](https://twitter.com/MinnyMausGG)
 ## [Download](https://github.com/leigholiver/nydus/releases/latest/)
 
 ## Plugins
-**Nydus Notes** - Keep notes on your opponents and automatically display them when you enter a game (Thanks to Aggression1 for inspiration)
+**Nydus Notes** - Keep notes on your opponents and display them automatically when you enter a game (Thanks to Aggression1 for inspiration)
 
 **F2HabitBreaker** - Create overlays to prevent you from clicking the all army button or the command card (Windows only)
 
 **Scene Switcher** - Switch scenes in Streamlabs OBS or OBS-Studio when you enter/leave a game (OBS-Studio requires the [obs-websocket plugin](https://github.com/Palakis/obs-websocket/releases/latest))
 
-**Nydus Bet** - Betting game Twitch chat bot
+**Nydus Bet** - Twitch chat betting game
 
 **Sound of Victory** - Play sounds when you win or lose
 
 **Score Tracker** - Track of your scores vs each race
 
-**Webhook** - Send web requests with game data when you join or leave a game
+**Webhook** - Send http requests with game data when you join or leave a game
 
 ---
 

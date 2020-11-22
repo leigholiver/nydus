@@ -1,0 +1,46 @@
+name: 'Build (Windows)'
+description: 'Builds nydus for windows and uploads the artifact to a release'
+inputs:
+  version:
+    description: 'Version number'
+    required: true
+  upload_url:
+    description: 'Release asset upload URL'
+    required: true
+outputs:
+  artifact_url: 
+    description: "URL to the built artifact in release"
+    value: ${{ steps.upload-release-asset.outputs.browser_download_url }}
+runs:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run build script
+      shell: cmd
+      run: |
+        build-win.bat
+
+    - name: Create archive
+      run: |
+        Compress-Archive ./dist/* "${{needs.Create-Release.outputs.version}}.zip"
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ inputs.upload_url }}
+        asset_path: ./${{ inputs.version }}.zip
+        asset_name: nydus-${{ inputs.version }}-linux.zip
+        asset_content_type: application/zip
