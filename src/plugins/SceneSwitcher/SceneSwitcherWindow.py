@@ -68,6 +68,7 @@ class SceneSwitcherWindow(QtWidgets.QMainWindow):
         self.websocketSecret.setText(self.config.websocketSecret)
         self.slobsIP.setText(self.config.slobsIP)
         self.slobsPort.setText(self.config.slobsPort)
+        self.slobsToken.setText(self.config.slobsToken)
         self.switchOnLoading.setChecked(self.config.switchOnLoading)
 
         self.inGameCombo.currentTextChanged.connect(lambda value: self.setAttrIfNotLoading(self.config, 'sceneInGame', value))
@@ -89,8 +90,9 @@ class SceneSwitcherWindow(QtWidgets.QMainWindow):
         self.websocketSecret.textChanged.connect(lambda: self.setAttrIfNotLoading(self.config, 'websocketSecret', self.websocketSecret.text()))
         self.slobsIP.textChanged.connect(lambda: self.setAttrIfNotLoading(self.config, 'slobsIP', self.slobsIP.text()))
         self.slobsPort.textChanged.connect(lambda: self.setAttrIfNotLoading(self.config, 'slobsPort', self.slobsPort.text()))
+        self.slobsToken.textChanged.connect(lambda: self.setAttrIfNotLoading(self.config, 'slobsToken', self.slobsToken.text()))
 
         self.slobsRadio.toggled.connect(lambda: self.toggleBackend('slobs', self.slobsRadio))
         self.websocketRadio.toggled.connect(lambda: self.toggleBackend('websocket', self.websocketRadio))
-        self.connectButton.clicked.connect(lambda: self.parent.backendSwitched(self.config.backend))
+        self.connectButton.clicked.connect(lambda: self.parent.requestScenes())
         self.switchOnLoading.toggled.connect(lambda: self.toggleSwitchOnLoadingScreen(self.switchOnLoading.isChecked()))

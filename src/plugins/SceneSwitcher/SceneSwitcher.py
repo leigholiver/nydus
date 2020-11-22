@@ -1,11 +1,27 @@
-import sys, json
+import sys, json, time
 from PyQt5.QtCore import QTimer
 from support.plugins.NydusPlugin import NydusPlugin 
 from .SceneSwitcherWindow import SceneSwitcherWindow
 from .SceneSwitcherConfig import SceneSwitcherConfig
 from .SLOBSBackend import SLOBSBackend
 from .OBSWebsocketBackend import OBSWebsocketBackend
-       
+
+CONFIG_SCENE_KEYS = [
+    'sceneInGame',
+    'sceneOutOfGame',
+    'sceneReplay',
+    'sceneObserving',
+    'sceneLobby',
+    'sceneScoreScreen',
+    'sceneProfile',
+    'sceneHome',
+    'sceneCampaign',
+    'sceneMultiplayer',
+    'sceneReplaysMenu',
+    'sceneCollection',
+    'sceneCustom'
+]
+
 class SceneSwitcher(NydusPlugin):
     name = "Scene Switcher"
     info = "Switch scenes in OBS-Studio/Streamlabs OBS when you enter or leave a game or change menus (OBS-Studio requires the obs-websocket plugin)"
@@ -28,9 +44,12 @@ class SceneSwitcher(NydusPlugin):
         self.backendSwitched(self.config.backend)
 
     def stop(self):
-        if self.backend != None:
-            self.backend.stop()
-            self.backend = None
+        try:
+            if self.backend != None:
+                self.backend.stop()
+                self.backend = None
+        except Exception as e:
+            print("[%s] %s" % (e.__class__.__name__, str(e)))
 
     def enterGame(self, data, isReplay):
         self.inGame = True
@@ -97,7 +116,24 @@ class SceneSwitcher(NydusPlugin):
         if self.backend != None:
             self.backend.switchScene(scene)
 
+    def loadBackendScenes(self, backend):
+        for key in CONFIG_SCENE_KEYS:
+            if backend in self.config.backendScenes.keys() and key in self.config.backendScenes[backend].keys():
+                setattr(self.config, key, self.config.backendScenes[backend][key])
+            else:
+                setattr(self.config, key, '')
+
+    def saveBackendScenes(self, backend):
+        out = {}
+        for key in CONFIG_SCENE_KEYS:
+            out[key] = getattr(self.config, key)
+        self.config.backendScenes[backend] = out
+
     def backendSwitched(self, backend):
+        if self.config.backend != backend:
+            self.saveBackendScenes(self.config.backend)
+            self.loadBackendScenes(backend)
+
         if self.backend != None:
             self.backend.stop()
             self.backend = None
@@ -112,7 +148,6 @@ class SceneSwitcher(NydusPlugin):
             self.backend.sceneBroadcast.connect(lambda scenes: self.ui.refreshScenes(scenes))
             self.backend.log.connect(lambda message: self.log(message))
             self.backend.start()
-
 
     def getSceneValue(self, key):
         data = {

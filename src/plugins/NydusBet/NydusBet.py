@@ -11,24 +11,15 @@ class NydusBet(NydusPlugin):
     name = "Nydus Bet"
     info = "Automatic twitch chat betting on your games"
     website = "https://github.com/leigholiver/nydus"
-
-    sendMessage = pyqtSignal(str)
-
-    # whitelist of functions allowed to be called from chat
+    
     allowedChatFunctions = ['points', 'leaderboard']
-
+    sendMessage = pyqtSignal(str)
+    
     def __init__(self):
         NydusPlugin.__init__(self)
         self.config = NydusBetConfig()
-
-        self.bot = Bot(self, {
-            'username': self.config.username,
-            'oauth': self.config.oauth,
-            'channel': self.config.channel
-        })
-        self.bot.start()
-        self.bot.command.connect(self.command)
-
+        self.bot = None
+        
         self.game = Game(self)
         self.game.gameStarted.connect(self.gameStarted)
         self.game.gameEnded.connect(self.gameEnded)
@@ -40,6 +31,21 @@ class NydusBet(NydusPlugin):
         self.timer = QTimer()
         self.timer.timeout.connect(self.closeGame)
         self.timer.setSingleShot(True)
+
+    def start(self):
+        if not self.bot:
+            self.bot = Bot(self, {
+                'username': self.config.username,
+                'oauth': self.config.oauth,
+                'channel': self.config.channel
+            })
+            self.bot.start()
+            self.bot.command.connect(self.command)
+    
+    def stop(self):
+        if self.bot:
+            self.bot.stop()
+            self.bot = None
 
     # betting enter game
     def gameStarted(self, game):

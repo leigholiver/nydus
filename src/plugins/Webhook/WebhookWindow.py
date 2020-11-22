@@ -31,9 +31,12 @@ class WebhookWindow(QtWidgets.QMainWindow):
         self.sendRequest(data)
 
     def sendRequest(self, data):
-        #data = urlencode(data) # query string 
         data = quote(json.dumps(data))
-        for item in self.urlList.findItems("*", Qt.MatchWildcard):
+        if len(self.getAllItems()) == 0:
+            print("No webhooks found, skipping event")
+            return
+
+        for item in self.getAllItems():
             if item.data['enabled']:
                 url = item.data['url']
                 if item.data['method'] == "GET":
@@ -43,15 +46,21 @@ class WebhookWindow(QtWidgets.QMainWindow):
                     url = url + delim + "json=" + data
                     try:
                         r = requests.get(url)
-                        self.parent.log("[" + item.data['name'] + "] GET " + str(r.status_code) + " (" + item.data['url'] + ")")
+                        print("[" + item.data['name'] + "] GET " + str(r.status_code) + " (" + item.data['url'] + ")")
                     except Exception as e:
-                        self.parent.log("[" + item.data['name'] + "] GET " + str(e))
+                        print("[" + item.data['name'] + "] GET " + str(e))
                 else:
                     try:
                         r = requests.post(item.data['url'], data)
-                        self.parent.log("[" + item.data['name'] + "] POST " + str(r.status_code) + " (" + item.data['url'] + ")")
+                        print("[" + item.data['name'] + "] POST " + str(r.status_code) + " (" + item.data['url'] + ")")
                     except Exception as e:
-                        self.parent.log("[" + item.data['name'] + "] POST " + str(e))
+                        print("[" + item.data['name'] + "] POST " + str(e))
+
+    def getAllItems(self):
+        output = []
+        for i in range(0,len(self.urlList)):
+            output.append(self.urlList.item(i))
+        return output
 
     def newButtonPressed(self):
         item = WebhookURLListItem({
@@ -84,7 +93,7 @@ class WebhookWindow(QtWidgets.QMainWindow):
 
     def save(self):
         urls = []
-        for item in self.urlList.findItems("*", Qt.MatchWildcard):
+        for item in self.getAllItems():
             urls.append(item.data)
         try:
             with open(os.path.dirname(__file__) + '/data.json', 'w') as outfile: 

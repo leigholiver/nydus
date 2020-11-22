@@ -14,7 +14,7 @@ class Worker(QThread):
         self.inGame = False
         self.menu = ""
 
-        self.initialTimeout = 1
+        self.initialTimeout = 0.5
         self.maxTimeout = 5
 
         self.timeout = self.initialTimeout
@@ -61,7 +61,7 @@ class Worker(QThread):
                 except Exception as e:
                     self.log.emit("[Worker] " + str(e))
                     self.timeout = self.maxTimeout
-                    self.log.emit("[Worker] Trying again in " + str(self.timeout / 1000) + " seconds")
+                    self.log.emit("[Worker] Trying again in %d seconds" % self.timeout)
 
             time.sleep(self.timeout)
 

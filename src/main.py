@@ -17,16 +17,7 @@ except:
     pass
 
 def main():
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    logger = Logger(os.path.abspath("."))
-    sys.stdout = logger
-    sys.stderr = logger
-
+    base_path, logger = do_setup()
     try:
         app = QApplication(sys.argv)
         app.setWindowIcon(QIcon(base_path + '/lib/nydus.ico'))
@@ -56,6 +47,24 @@ def main():
         logger.log("[Core] Fatal error: " + str(e))
         logger.dump()
         sys.exit(1)
+
+def do_setup():    
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    if not os.path.exists('data/logs'):
+        os.makedirs('data/logs')
+    
+    logger = Logger(os.path.abspath("."))
+    sys.stdout = logger
+    sys.stderr = logger
+    return base_path, logger
 
 def get_stylesheet(base_path):
     f = QFile(base_path + "/lib/style.qss")

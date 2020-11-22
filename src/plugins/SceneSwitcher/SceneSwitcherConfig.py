@@ -17,6 +17,7 @@ class _SceneSwitcherConfig:
             'websocketSecret': 'secret',
             'slobsIP': 'localhost',
             'slobsPort': '59650',
+            'slobsToken': '',
             'sceneInGame': '',
             'sceneOutOfGame': '',
             'sceneReplay': '',
@@ -30,7 +31,8 @@ class _SceneSwitcherConfig:
             'sceneReplaysMenu': '',
             'sceneCollection': '',
             'sceneCustom': '',
-            'switchOnLoading': False
+            'switchOnLoading': False,
+            'backendScenes': {}
         })
 
         if os.path.exists(self.filename):
@@ -53,6 +55,7 @@ class _SceneSwitcherConfig:
                 'websocketSecret': self.websocketSecret,
                 'slobsIP': self.slobsIP,
                 'slobsPort': self.slobsPort,
+                'slobsToken': self.slobsToken,
                 'sceneInGame': self.sceneInGame,
                 'sceneOutOfGame': self.sceneOutOfGame,
                 'sceneReplay': self.sceneReplay,
@@ -66,7 +69,8 @@ class _SceneSwitcherConfig:
                 'sceneReplaysMenu': self.sceneReplaysMenu,
                 'sceneCollection': self.sceneCollection,
                 'sceneCustom': self.sceneCustom,
-                'switchOnLoading': self.switchOnLoading
+                'switchOnLoading': self.switchOnLoading,
+                'backendScenes': self.backendScenes
             }, outfile, indent=4, sort_keys=True)
 
     def fromData(self, data):
@@ -76,6 +80,7 @@ class _SceneSwitcherConfig:
         self.websocketSecret = data['websocketSecret']
         self.slobsIP = data['slobsIP']
         self.slobsPort = data['slobsPort']
+        self.slobsToken = data['slobsToken']
         self.sceneInGame = data['sceneInGame']
         self.sceneOutOfGame = data['sceneOutOfGame']
         self.sceneReplay = data['sceneReplay']
@@ -90,3 +95,4 @@ class _SceneSwitcherConfig:
         self.sceneCollection = data['sceneCollection']
         self.sceneCustom = data['sceneCustom']
         self.switchOnLoading = data['switchOnLoading']
+        self.backendScenes = data['backendScenes']

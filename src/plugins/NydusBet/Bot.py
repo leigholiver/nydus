@@ -1,4 +1,4 @@
-import sys, socket, re
+import sys, socket, re, time
 from PyQt5.QtCore import QThread, pyqtSignal
 
 class Bot(QThread):
@@ -13,6 +13,7 @@ class Bot(QThread):
         self.data['channel'] = "#" + self.data['channel'].lower()
         self.con = socket.socket()
         self.parent.sendMessage.connect(self.sendMessage)
+        self.stopping = False
     
     def sendMessage(self, message):
         self.parent.log("Sending " + message + " to " + self.data['channel'])
@@ -38,7 +39,7 @@ class Bot(QThread):
         self.con.send(bytes('JOIN %s\r\n' % self.data['channel'], 'UTF-8'))
 
         data = ""
-        while True:
+        while not self.stopping:
             try:
                 data = data+self.con.recv(1024).decode('UTF-8')
                 data_split = re.split(r"[~\r\n]+", data)
@@ -57,11 +58,17 @@ class Bot(QThread):
                             message = self.get_message(line)
                             self.handleMessage(sender, message)
 
-            except socket.error:
-                self.parent.log("Twitch chat socket died")
+            except socket.error as e:
+                self.parent.log("Twitch chat socket error: [%s] %s" % (e.__class__.__name__, str(e)))
+                time.sleep(2)
 
             except socket.timeout:
                 self.parent.log("Twitch chat socket timeout")
+
+    def stop(self):
+        self.stopping = True
+        self.exit()
+        self.wait()
 
     def send_pong(self, msg):
         self.con.send(bytes('PONG %s\r\n' % msg, 'UTF-8'))

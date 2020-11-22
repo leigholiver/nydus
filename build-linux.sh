@@ -6,8 +6,6 @@ if [ $? -ne 0 ]; then
 fi
 sudo chmod -R 777 dist
 cp -r src/plugins dist
-mkdir dist/data
-mkdir dist/data/logs
 find dist | grep -E "(__pycache__|\.gitignore$)" | xargs rm -rf
 
 # remove f2habitbreaker, the overlays cannot be

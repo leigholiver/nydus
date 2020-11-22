@@ -24,7 +24,7 @@ Icon by [@MinnyMausGG](https://twitter.com/MinnyMausGG)
 ---
 
 ## Creating plugins
-A plugin is a python create a class extending `support.plugins.NydusPlugin` and put it in your `plugins` folder. Nydus will call functions on your plugin when the state of the SC2 client api changes. There are a couple of dummy plugins in the `examples` folder you can use as a starting point, along with the included plugins, but here is the most bare bones example:
+Create a class extending `support.plugins.NydusPlugin` and put it in your `plugins` folder. Nydus will call functions on your plugin when the state of the SC2 client api changes. There are a couple of dummy plugins in the `examples` folder you can use as a starting point, along with the included plugins, but here is the most bare bones example:
 
 ```python
 # plugins/CoolPlugin.py
@@ -35,6 +35,9 @@ class CoolPlugin(NydusPlugin):
 
     def __init__(self):
         NydusPlugin.__init__(self)
+
+    def enterGame(self, data, isReplay):
+      print("joined a game!")
 ```
 
 ## Game Events

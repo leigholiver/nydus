@@ -21,21 +21,24 @@ class OBSWebsocketBackend(Backend):
                     self.requestScenes()
                 except exceptions.ConnectionFailure as e:
                     self.connected = False
-                    self.log.emit("Error connecting to OBS Websocket - " + str(e))
+                    self.log.emit("OBS Websocket connection error: [%s] %s " % (e.__class__.__name__, str(e)))
                 except Exception as e:
-                    self.log.emit("Error in OBS Websocket - " + str(e))
+                    self.log.emit("OBS Websocket error: [%s] %s " % (e.__class__.__name__, str(e)))
             time.sleep(1)
         if self.ws != None:
             self.ws.disconnect()
         
     def requestScenes(self):
+        if not self.connected:
+            return
+            
         out = []
         try:
             scenes = self.ws.call(requests.GetSceneList())
             for s in scenes.getScenes():
                 out.append(s['name'])
         except Exception as e:
-            self.log.emit("Error getting scene list from OBS Websocket - " + str(e))
+            self.log.emit("OBS Websocket error getting scene list: [%s] %s " % (e.__class__.__name__, str(e)))
 
         self.sceneBroadcast.emit(out)
 
@@ -43,4 +46,4 @@ class OBSWebsocketBackend(Backend):
         try:
             self.ws.call(requests.SetCurrentScene(scene))
         except Exception as e:
-            self.log.emit("Error switching scene - " + str(e))
+            self.log.emit("OBS websocket error switching scene: [%s] %s " % (e.__class__.__name__, str(e)))

@@ -10,5 +10,5 @@ class WebhookURLListItem(QListWidgetItem):
         self.setText(
              "[" + ("On" if self.data['enabled']  else "Off") + "] " + 
              self.data['name'] + 
-             " (" + self.data['url'] + ")"
+             " (" + self.data['method'] + " " + self.data['url'] + ")"
         )

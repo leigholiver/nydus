@@ -11,7 +11,8 @@ a = Analysis(['src/main.py'],
                 ('src/lib/nydus.ui', 'lib'),
                 ('src/lib/UsernamesDialog.ui', 'lib'),
                 ('src/lib/nydus.ico', 'lib'),
-                ('src/lib/style.qss', 'lib')
+                ('src/lib/style.qss', 'lib'),
+                ('VERSION', '.')
              ],
              hiddenimports=[
                 'PyQt5.sip'
@@ -37,5 +38,5 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True,
+          console=False,
           icon='src/lib/nydus.ico' )
