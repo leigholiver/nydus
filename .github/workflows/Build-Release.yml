@@ -1,7 +1,7 @@
 name: Build and Release
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -24,7 +24,8 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           release_name: ${{ steps.version.outputs.version }}
           draft: true
-          prerelease: false
+          # prerelease: false
+          prerelease: true
 
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -74,6 +75,46 @@ jobs:
   Build-Linux:
     needs: Create-Release
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run build script
+      run: |
+        ./build-linux.sh
+
+    - name: Create archive
+      run: |
+        (cd dist; zip -r ../$(cat ../VERSION).zip . )
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: dist
+        path: dist
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.Create-Release.outputs.upload_url }}
+        asset_path: ./${{needs.Create-Release.outputs.version}}.zip
+        asset_name: nydus-${{needs.Create-Release.outputs.version}}-linux.zip
+        asset_content_type: application/zip
+
+  Build-Macos:
+    needs: Create-Release
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
