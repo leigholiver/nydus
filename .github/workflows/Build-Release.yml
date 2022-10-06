@@ -149,5 +149,5 @@ jobs:
       with:
         upload_url: ${{ needs.Create-Release.outputs.upload_url }}
         asset_path: ./${{needs.Create-Release.outputs.version}}.zip
-        asset_name: nydus-${{needs.Create-Release.outputs.version}}-linux.zip
+        asset_name: nydus-${{needs.Create-Release.outputs.version}}-macos.zip
         asset_content_type: application/zip
