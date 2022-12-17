@@ -1,5 +1,5 @@
 import time
-from obswebsocket import obsws, requests, exceptions
+import obsws_python as obsws
 from PyQt5.QtCore import pyqtSignal
 from .Backend import Backend
 from .SceneSwitcherConfig import SceneSwitcherConfig
@@ -9,41 +9,40 @@ class OBSWebsocketBackend(Backend):
     def __init__(self):
         Backend.__init__(self)
         self.config = SceneSwitcherConfig()
-        self.ws = obsws(self.config.websocketIP, self.config.websocketPort, self.config.websocketSecret)
-        self.connected = False
+        self.ws = None
 
     def run(self):
         while not self.stopping:
-            if self.connected == False:
-                try:
-                    self.ws.connect()
-                    self.connected = True
+            try:
+                if self.ws == None:
+                    self.ws = obsws.ReqClient(
+                        host=self.config.websocketIP,
+                        port=self.config.websocketPort,
+                        password=self.config.websocketSecret
+                    )
+                else:
                     self.requestScenes()
-                except exceptions.ConnectionFailure as e:
-                    self.connected = False
-                    self.log.emit("OBS Websocket connection error: [%s] %s " % (e.__class__.__name__, str(e)))
-                except Exception as e:
-                    self.log.emit("OBS Websocket error: [%s] %s " % (e.__class__.__name__, str(e)))
-            time.sleep(1)
-        if self.ws != None:
-            self.ws.disconnect()
-        
+            except Exception as e:
+                self.log.emit("OBS Websocket error: [%s] %s " % (e.__class__.__name__, str(e)))
+                self.ws = None
+
+            if self.stopping:
+                self.ws = None
+
+            time.sleep(0.5)
+
     def requestScenes(self):
-        if not self.connected:
-            return
-            
-        out = []
         try:
-            scenes = self.ws.call(requests.GetSceneList())
-            for s in scenes.getScenes():
-                out.append(s['name'])
+            resp = self.ws.get_scene_list()
+            scenes = [di.get("sceneName") for di in reversed(resp.scenes)]
+            self.sceneBroadcast.emit(scenes)
         except Exception as e:
             self.log.emit("OBS Websocket error getting scene list: [%s] %s " % (e.__class__.__name__, str(e)))
-
-        self.sceneBroadcast.emit(out)
+            raise e
 
     def switchScene(self, scene):
         try:
-            self.ws.call(requests.SetCurrentScene(scene))
+            self.ws.set_current_program_scene(scene)
         except Exception as e:
             self.log.emit("OBS websocket error switching scene: [%s] %s " % (e.__class__.__name__, str(e)))
+            raise e
