@@ -14,8 +14,10 @@ class Worker(QThread):
         self.inGame = False
         self.menu = ""
 
-        self.initialTimeout = 0.5
-        self.maxTimeout = 5
+        # time between requests in seconds
+        self.initialTimeout = 0.25    # general timeout - starts here, and resets here on successful request
+        self.maxTimeout = 5           # maximum time between requests
+        self.timeoutStep = 0.25       # on error, add this much time to the next request
 
         self.timeout = self.initialTimeout
 
@@ -34,10 +36,10 @@ class Worker(QThread):
                         raise Exception("No ui response from " + URL)
                     gameResponse = r.json()
                     self.timeout = self.initialTimeout
-                    
+
                     try:
-                        if (len(uiResponse['activeScreens']) == 0 
-                            and not self.inGame 
+                        if (len(uiResponse['activeScreens']) == 0
+                            and not self.inGame
                             and gameResponse['players'][0]['result'] == "Undecided"):
                             self.inGame = True
                             self.log.emit("[Worker] Enter game")
@@ -57,10 +59,11 @@ class Worker(QThread):
                             self.menu = menu
                     except Exception as e:
                         self.log.emit("[Worker] " + str(e))
-                        
+
                 except Exception as e:
                     self.log.emit("[Worker] " + str(e))
-                    self.timeout = self.maxTimeout
+                    if self.timeout < self.maxTimeout:
+                        self.timeout += self.timeoutStep
                     self.log.emit("[Worker] Trying again in %d seconds" % self.timeout)
 
             time.sleep(self.timeout)
